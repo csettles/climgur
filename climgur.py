@@ -28,25 +28,18 @@ class CLUploader:
         self.metadata = dict(title=self.args.title,
                              description=self.args.description)
 
-    def get_params(self, album=False):
-        if self.args.metadata:
-            data = get_metadata(album)
-        else:
-            data = dict()
-        return data
-
-    def upload_pic(self, path, album_id=None, data=None):
-        data = data or self.metadata   # it ain't pretty, but it works
+    def upload_pic(self, path, data, album_id=None):
         anon = self.client.auth is None
         if album_id:
             data['album'] = album_id
         image = self.client.upload_from_path(path, data, anon)
+
         return image['id']  # return image if more data is needed
 
     def upload_album(self):
-        metadata = get_metadata(True)
-        album = self.client.create_album(metadata)
-        print('Created album named "{}"'.format(metadata.get('title')))
+        album_data = get_metadata(True) if self.args.metadata else self.metadata
+        album = self.client.create_album(album_data)
+        print('Created album named "{}"'.format(album_data.get('title')))
         album_id = album['id'] if self.client.auth else album['deletehash']
 
         # get all images in the folder with approved file extensions
@@ -55,12 +48,14 @@ class CLUploader:
 
         for f in files:
             print('Uploading {}'.format(os.path.basename(f)))
-            self.upload_pic(f, album_id, self.get_params())
+            img_data = get_metadata() if self.args.metadata else dict()
+            self.upload_pic(f, img_data, album_id)
+
         return album['id']  # return album if more data is needed
 
     def main(self):
         if os.path.isfile(self.args.path):
-            pic_id = self.upload_pic(self.args.path)
+            pic_id = self.upload_pic(self.args.path, self.metadata)
             print('Upload complete.')
             webbrowser.open(self.client.get_image(pic_id).link)
         elif os.path.isdir(self.args.path):

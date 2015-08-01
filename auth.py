@@ -9,8 +9,11 @@ def get_anon_client():
     '''Simple ImgurClient that is not tied to a user account'''
     config = get_config()
     config.read('auth.ini')
-    client_id = config.get('credentials', 'CLIENT_ID', fallback=None)
-    client_secret = config.get('credentials', 'CLIENT_SECRET', fallback=None)
+    client_id = config.get('credentials', 'client_id')
+    client_secret = config.get('credentials', 'client_secret')
+    # removed for compatibility with python 2.7
+    # client_id = config.get('credentials', 'CLIENT_ID', fallback=None)
+    # client_secret = config.get('credentials', 'CLIENT_SECRET', fallback=None)
     return ImgurClient(client_id, client_secret)
 
 
@@ -18,9 +21,9 @@ def log_in(client):
     '''Ties ImgurClient with a user account so uploads will be remembered'''
     config = get_config()
     config.read('auth.ini')
-    access_token = config.get('credentials', 'access_token', fallback=None)
-    refresh_token = config.get('credentials', 'refresh_token', fallback=None)
-    if access_token and refresh_token:
+    access_token = config.get('credentials', 'access_token')
+    refresh_token = config.get('credentials', 'refresh_token')
+    if len(access_token) > 0 and len(refresh_token) > 0:
         client.set_user_auth(access_token, refresh_token)
         return client
 
