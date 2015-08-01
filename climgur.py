@@ -12,7 +12,7 @@ from helpers import get_metadata
 file_extensions = ['.png', '.jpg', '.gif', '.apng', '.bmp', '.jpeg', '.tiff', '.pdf', '.xcf']
 
 
-class ImgurUp:
+class CLUploader:
 
     def __init__(self, args):
         self.args = args
@@ -80,4 +80,4 @@ if __name__ == "__main__":
     parser.add_argument('-u', '--user', action='store_true', help="upload to a user account")
     parser.add_argument('-m', '--metadata', action='store_true', help="add information to individual images when uploading an album")
     args = parser.parse_args()
-    ImgurUp(args=args).main()
+    CLUploader(args=args).main()

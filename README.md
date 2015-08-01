@@ -1,8 +1,14 @@
 # climgur
 
-This is a fork of the imgurup repo, but instead uses argparse and imgurpyton. Actually, almost 100% of the original code is gone as I got a little carried away (woops). Anyways, 
+Climgur (command line imgur) is a fork of the imgurup repo, but instead uses argparse and imgurpyton. Actually, almost 100% of the original code is gone as I got a little carried away (woops).
+Current features:
+* Upload anonymously or as a registered user
+* Upload single image
+* Upload local folder as album
+* Set title, description, album type, privacy setting depending on upload type
 
 ## Setup
+
 In order to run climgur, you must create an auth.ini file in the main directory.
 
 Provide your client_id and client_secret by [adding an imgur client](http://api.imgur.com/oauth2/addclient) (requires an imgur account). Leave the access and refresh token fields blank.
@@ -17,7 +23,7 @@ refresh_token=
 ## Use
 Only use the -m argument when the path argument points to a folder. Single file uploads can use the -t and -d arguments to add relavent metadata. Please note that using the -m argument will overwrite -t and -d arguments.
 
-By default, all uploads are anonymous. If you want to associate an upload with a user account, use the -u argument.
+*By default, all uploads are anonymous.* If you want to associate an upload with a user account, use the -u argument.
 
  ```
  positional arguments:
@@ -30,7 +36,7 @@ optional arguments:
   -d DESCRIPTION, --description DESCRIPTION
                         upload description
   -u, --user            upload to a user account
-  -m, --metadata        add info pics when uploading album
+  -m, --metadata        add information to individual images when uploading an album
 ```
 
 ## Requirements
