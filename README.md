@@ -1,6 +1,6 @@
 # climgur
 
-Climgur (command line imgur) is a fork of the imgurup repo, but instead uses argparse and imgurpyton. Actually, almost 100% of the original code is gone as I got a little carried away (woops).
+Climgur (command line imgur) is a fork of the imgurup repo, but instead uses argparse and imgurpython. Actually, almost 100% of the original code is gone as I got a little carried away (woops).
 Current features:
 * Upload anonymously or as a registered user
 * Upload single image
