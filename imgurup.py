@@ -1,43 +1,83 @@
-#!/usr/bin/python2
-# coding: utf-8
-# Author: David Davidson 
-# Twitter: @dailydavedavids
-# Licence: WTFPL
-# Version: 20150731.1
-import requests
-import base64
-import json
+from __future__ import print_function
+import argparse
 import sys
 import os
+from glob import glob
+import webbrowser
 
-def upload(image_path, client_id):
-    try:
-        f = open(image_path, "rb") # open file for reading, binary mode
-    except Exception: # I should do something with the exception. Later I will add logging for these
-        sys.exit("{!} That file does not exist!") # for now, just bail
-    b64image = base64.standard_b64encode(f.read()) # base64 encode the image data
-    headers = {'Authorization': 'Client-ID '+client_id} # set the client id in auth header
-    data = {'image': b64image, 'title': '%s' %(os.path.basename(image_path))} # make post data
-    try:
-        r = requests.post(url="https://api.imgur.com/3/upload.json", data=data, headers=headers) # send request
-    except Exception, e: # catch the exception if something goes wrong
-        print "{-} Image Upload Failed. Printing stack trace and exiting..." # bail.
-        sys.exit(str(e)) # print the stacktrace. Later, I should figure out what kind of exceptions happen and handle them and log them
-    lol = json.loads(r.text) # get the json...
-    print lol['data']['link'] # print the link
+from auth import get_anon_client, log_in
+from helpers import get_metadata
 
-def main(args):
-    # some of the logic in here is a bit backwards. I should probably fix this to make it more nice
-    if len(args) != 2: # only 2 args needed
-        sys.exit("use: %s /path/to/image/file.ext" %(args[0])) # exit with usage 
-    else:
-       pass # we can continue
-    client_id_env_var = 'IMGUR_CLIENT_ID' 
-    if client_id_env_var in os.environ.keys(): # check if env var exist
-        client_id = os.environ[client_id_env_var] # get it and save it
-    else:
-        sys.exit("{!} Set environmental variable IMGUR_CLIENT_ID to your client_id :)")
-    upload(image_path=args[1], client_id=client_id)
+# file extensions accepted by imgur
+file_extensions = ['.png', '.jpg', '.gif', '.apng', '.bmp', '.jpeg', '.tiff', '.pdf', '.xcf']
+
+
+class ImgurUp:
+
+    def __init__(self, args):
+        self.args = args
+        self.initialize()
+
+    def initialize(self):
+        """Sets ImgurClient scope based on user preference"""
+        if not args.user:
+            self.client = get_anon_client()
+        else:
+            self.client = log_in(get_anon_client())
+
+        self.metadata = dict(title=self.args.title,
+                             description=self.args.description)
+
+    def get_params(self, album=False):
+        if self.args.metadata:
+            data = get_metadata(album)
+        else:
+            data = dict()
+        return data
+
+    def upload_pic(self, path, album_id=None, data=None):
+        data = data or self.metadata   # it ain't pretty, but it works
+        anon = self.client.auth is None
+        if album_id:
+            data['album'] = album_id
+        image = self.client.upload_from_path(path, data, anon)
+        return image['id']  # return image if more data is needed
+
+    def upload_album(self):
+        metadata = get_metadata(True)
+        album = self.client.create_album(metadata)
+        print('Created album named "{}"'.format(metadata.get('title')))
+        album_id = album['id'] if self.client.auth else album['deletehash']
+
+        # get all images in the folder with approved file extensions
+        files = [glob(os.path.join(self.args.path, '*'+ext)) for ext in file_extensions]
+        files = sum(files, [])  # ugly way to flatten list
+
+        for f in files:
+            print('Uploading {}'.format(os.path.basename(f)))
+            self.upload_pic(f, album_id, self.get_params())
+        return album['id']  # return album if more data is needed
+
+    def main(self):
+        if os.path.isfile(self.args.path):
+            pic_id = self.upload_pic(self.args.path)
+            print('Upload complete.')
+            webbrowser.open(self.client.get_image(pic_id).link)
+        elif os.path.isdir(self.args.path):
+            album_id = self.upload_album()
+            print('Upload complete.')
+            webbrowser.open(self.client.get_album(album_id).link)
+        else:
+            sys.exit("\nWhat you are trying to upload does not exist")
+
 
 if __name__ == "__main__":
-    main(args=sys.argv)
+    description = "A command line wrapper for imgur's api"
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('path', action='store', help="path to file or folder to upload")
+    parser.add_argument('-t', '--title', action='store', help="title of upload")
+    parser.add_argument('-d', '--description', action='store', help='upload description')
+    parser.add_argument('-u', '--user', action='store_true', help="upload to a user account")
+    parser.add_argument('-m', '--metadata', action='store_true', help="add info pics when uploading album")
+    args = parser.parse_args()
+    ImgurUp(args=args).main()
