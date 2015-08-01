@@ -1,35 +1,44 @@
-# imgurup
+# climgur
 
-"imgurup", the commandline imgur uploader, was written for a very simple reason. I wanted to be able to upload images (usually screenshots, though not always - see [imgurscrot](https://github.com/0x27/imgurscrot) for my "take screenshot and upload" tool :D) to imgur without needing to open a web browser or whatever.
+This is a fork of the imgurup repo, but instead uses argparse and imgurpyton. Actually, almost 100% of the original code is gone as I got a little carried away (woops). Anyways, 
+
+## Setup
+In order to run climgur, you must create an auth.ini file in the main directory.
+
+Provide your client_id and client_secret by [adding an imgur client](http://api.imgur.com/oauth2/addclient) (requires an imgur account). Leave the access and refresh token fields blank.
+```
+[credentials]
+client_id=
+client_secret=
+access_token=
+refresh_token=
+```
 
 ## Use
-Put it somewhere in $PATH as an executable (chmod +x) file named "imgurup" and just do "imgurup /path/to/file" to upload the file in question.
+Only use the -m argument when the path argument points to a folder. Single file uploads can use the -t and -d arguments to add relavent metadata. Please note that using the -m argument will overwrite -t and -d arguments.
 
-## API keys needed
-Get an API key from [api.imgur.com](https://api.imgur.com) and set the environmental variable "IMGUR_CLIENT_ID" to the client id you get. Just pick one of the anonymous tokens as I was not arsed linking screenshots 
-to accounts just yet.
+By default, all uploads are anonymous. If you want to associate an upload with a user account, use the -u argument.
+
+ ```
+ positional arguments:
+  path                  path to file or folder to upload
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TITLE, --title TITLE
+                        title of upload
+  -d DESCRIPTION, --description DESCRIPTION
+                        upload description
+  -u, --user            upload to a user account
+  -m, --metadata        add info pics when uploading album
+```
 
 ## Requirements
-imgurup requires only standard python2 libraries, with the exception of the [requests](https://pypi.python.org/pypi/requests) module, as I was not arsed using urllib for the HTTP stuff initially.  
-To install requests:
+climgur uses [requests](https://pypi.python.org/pypi/requests) and [imgurpython](https://github.com/Imgur/imgurpython) to upload images from the command line.
+To install any dependences, cd into the main directory and type into the command line:
 ```
-$ pip install requests
+$ pip install -r requirements.txt
 ```
-
-If you REALLY don't want to use requests, I provided a stdlib only version using urllib as "imgurup-stdlib.py", written while sitting in the pub :)
 
 ## Licence
 Licenced under the [WTFPL](http://www.wtfpl.net/).
-
-## computational cycles accepted for beer
-If you want, throw bitcoins at 13wUj3ZMut6uJAZKgZ4jCGz6tfqRvUzRgj and I will spend them on beer to fuel further stuff liek this.
-
-## Todo
-* Multiple image upload (album creation)
-* Tying it to imgur account
-* Refactoring and stuff (maybe even PEP-8 compliance!!!)
-* Replace requests stuff with stdlib only for fun [done - see imgurup-stdlib]
-* pip-compatible setuputils setup.py stuff
-
-## Bugs
-[Use the github issue tracker please :)](https://github.com/0x27/imgurup/issues)
