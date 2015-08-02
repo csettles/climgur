@@ -26,7 +26,7 @@ Only use the -m argument when the path argument points to a folder. Single file 
 *By default, all uploads are anonymous.* If you want to associate an upload with a user account, use the -u argument.
 
  ```
- positional arguments:
+positional arguments:
   path                  path to file or folder to upload
 
 optional arguments:
@@ -36,7 +36,7 @@ optional arguments:
   -d DESCRIPTION, --description DESCRIPTION
                         upload description
   -u, --user            upload to a user account
-  -m, --metadata        add information to individual images when uploading an album
+  -m, --metadata        add data to individual images when uploading album
 ```
 
 ## Requirements
@@ -45,6 +45,9 @@ To install any dependences, cd into the main directory and type into the command
 ```
 $ pip install -r requirements.txt
 ```
+
+## ToDo
+* add screenshot support
 
 ## Licence
 Licenced under the [WTFPL](http://www.wtfpl.net/).

@@ -10,7 +10,7 @@ from helpers import get_metadata
 
 # file extensions accepted by imgur
 file_extensions = ['.png', '.jpg', '.gif', '.apng',
-                   '.bmp', '.jpeg', '.tiff', '.pdf', '.xcf']
+                   '.bmp', '.tiff', '.pdf', '.xcf']
 
 
 class CLUploader:
@@ -29,6 +29,7 @@ class CLUploader:
             self.client = log_in(get_anon_client())
 
     def upload_pic(self, path, data, album_id=None):
+        # as of now, does not check for valid file extension
         anon = self.client.auth is None
         if album_id:
             data['album'] = album_id
