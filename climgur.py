@@ -57,15 +57,19 @@ class Uploader:
         return album['id']  # return album if more data is needed
 
     def main(self):
-        if self.args.screenshot and self.args.path.endswith('.png'):
-            from screenshot import take_screenshot
-            take_screenshot(self.args.path, self.args.delay)
-            pic_id = self.upload_pic(self.args.path, self.metadata)
-            print('Upload complete.')
-            webbrowser.open(self.client.get_image(pic_id).link)
+        args = self.args
+        if args.screenshot:
+            if args.path.endswith('.png') or args.path.endswith('.bmp'):
+                from screenshot import take_screenshot
+                take_screenshot(args.path, args.delay)
+                pic_id = self.upload_pic(args.path, self.metadata)
+                print('Upload complete.')
+                webbrowser.open(self.client.get_image(pic_id).link)
+            else:
+                sys.exit('File must be saved as a bitmap or png.')
 
-        elif os.path.isfile(self.args.path):
-            pic_id = self.upload_pic(self.args.path, self.metadata)
+        elif os.path.isfile(args.path):
+            pic_id = self.upload_pic(args.path, self.metadata)
             print('Upload complete.')
             webbrowser.open(self.client.get_image(pic_id).link)
 
