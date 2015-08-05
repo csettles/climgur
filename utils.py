@@ -1,23 +1,24 @@
 from __future__ import print_function
+
 album_fields = ['title', 'description', 'privacy', 'layout']
 
 
-def get_config():
-    '''Create config parser for auth.ini'''
-    try:
-        import ConfigParser
-        return ConfigParser.ConfigParser()
-    except ImportError:
-        import configparser
-        return configparser.ConfigParser()
+# def get_config():
+#     '''Create config parser for auth.ini'''
+#     try:
+#         import ConfigParser
+#         return ConfigParser.ConfigParser()
+#     except ImportError:
+#         import configparser
+#         return configparser.ConfigParser()
 
 
-def get_input(string):
-    '''Makes getting input compatible with python2/3'''
-    try:
-        return raw_input(string)
-    except NameError:
-        return input(string)
+# def get_input(string):
+#     '''Makes getting input compatible with python2/3'''
+#     try:
+#         return raw_input(string)
+#     except NameError:
+#         return input(string)
 
 
 def save_config(config):

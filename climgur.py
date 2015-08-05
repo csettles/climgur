@@ -6,22 +6,22 @@ from glob import glob
 import webbrowser
 
 from auth import get_anon_client, log_in
-from helpers import get_metadata
+from utils import get_metadata
 
 # file extensions accepted by imgur
-file_extensions = ['.png', '.jpg', '.gif', '.apng',
+file_extensions = ['.png', '.jpg', '.gif', '.tif',
                    '.bmp', '.tiff', '.pdf', '.xcf']
 
 
-class CLUploader:
+class Uploader:
 
     def __init__(self, args):
         self.args = args
         self.metadata = dict(title=self.args.title,
                              description=self.args.description)
-        self.initialize()
+        self.init_client()
 
-    def initialize(self):
+    def init_client(self):
         """Sets ImgurClient scope based on user preference"""
         if not args.user:
             self.client = get_anon_client()
@@ -57,30 +57,43 @@ class CLUploader:
         return album['id']  # return album if more data is needed
 
     def main(self):
-        if os.path.isfile(self.args.path):
+        if self.args.screenshot and self.args.path.endswith('.png'):
+            from screenshot import take_screenshot
+            take_screenshot(self.args.path, self.args.delay)
             pic_id = self.upload_pic(self.args.path, self.metadata)
             print('Upload complete.')
             webbrowser.open(self.client.get_image(pic_id).link)
+
+        elif os.path.isfile(self.args.path):
+            pic_id = self.upload_pic(self.args.path, self.metadata)
+            print('Upload complete.')
+            webbrowser.open(self.client.get_image(pic_id).link)
+
         elif os.path.isdir(self.args.path):
             album_id = self.upload_album()
             print('Upload complete.')
             webbrowser.open(self.client.get_album(album_id).link)
+
         else:
             sys.exit("\nWhat you are trying to upload does not exist")
 
 
 if __name__ == "__main__":
-    description = "A command line wrapper for imgur's api"
+    description = """A command line wrapper for imgur's api"""
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument(
-        'path', action='store', help="path to file or folder to upload")
-    parser.add_argument(
-        '-t', '--title', action='store', help="title of upload")
-    parser.add_argument(
-        '-d', '--description', action='store', help='upload description')
-    parser.add_argument(
-        '-u', '--user', action='store_true', help="upload to a user account")
+    parser.add_argument('path', action='store',
+                        help='path to file or folder to upload')
+    parser.add_argument('-t', '--title',
+                        action='store', help='title of upload')
+    parser.add_argument('-d', '--description',
+                        action='store', help='upload description')
+    parser.add_argument('-u', '--user', action='store_true',
+                        help='upload to stored user account')
     parser.add_argument('-m', '--metadata', action='store_true',
-                        help="add data to individual images when uploading album")
+                        help='add data to images when uploading album')
+    parser.add_argument('-s', '--screenshot', action='store_true',
+                        help='take screenshot and upload it')
+    parser.add_argument('--delay', default=3, type=int,
+                        help='delay (s) before taking screenshot')
     args = parser.parse_args()
-    CLUploader(args=args).main()
+    Uploader(args=args).main()

@@ -1,2 +1,5 @@
 requests
 imgurpython
+six
+autopy
+autopy3
