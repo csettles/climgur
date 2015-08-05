@@ -63,12 +63,15 @@ optional arguments:
                         title of upload
   -d DESCRIPTION, --description DESCRIPTION
                         upload description
-  -u, --user            upload to a user account
-  -m, --metadata        add data to individual images when uploading album
+  -u, --user            upload to stored user account
+  -m, --metadata        add data to images when uploading album
+  -s, --screenshot      take screenshot and upload it
+  --delay DELAY         delay (s) before taking screenshot
 ```
 
 ## To-Do
 * Add support for >1 account
+* Figure out way to make saving screenshot locally optional
 
 ## Licence
 Licenced under the [WTFPL](http://www.wtfpl.net/).
