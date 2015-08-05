@@ -40,7 +40,7 @@ $ sudo apt-get install python-dev -y
 $ sudo apt-get install <autopy or autopy3>
 ```
 
-### OS X
+#### OS X
 Install libpng and zlib from their websites and then enter `pip install <autopy or autopy3>`. Requires Mac OS 10.5 or later.
 
 #### Windows
@@ -50,11 +50,14 @@ The .whl files are named like so: `autopy-<pkg version>-cp<python version>-none-
 Install the downloaded file by changing into its directory and typing `pip install <filename>.whl`
 
 ## Use
+
+log.txt contains the submission time and deletion link of an upload (image/album). Delete the entry from log.txt after you are done.
+
 Only use the -m argument when the path argument points to a folder. Single file uploads can use the -t and -d arguments to add relavent metadata. Please note that using the -m argument will overwrite -t and -d arguments.
 
 *By default, all uploads are anonymous.* If you want to associate an upload with a user account, use the -u argument.
 
-Taking a screenshot will save to the path argument. The image destination **must** end with '.png' or '.bmp' or it the program will quit. The screenshot argument will overwrite the destination if the image already exists.
+Taking a screenshot will save to the path argument. The image destination **must** end with '.png' or '.bmp' or the program will quit. Any screenshot taken will overwrite an existing image if given an identical path.
 
  ```
 positional arguments:
@@ -71,8 +74,6 @@ optional arguments:
   -s, --screenshot      take screenshot and upload it
   --delay DELAY         delay (s) before taking screenshot
 ```
-
-log.txt contains the submission time and deletion link of an upload if you wish to delete a submission. Just delete the entry from log.txt after you are done.
 
 ## To-Do
 * Add support for >1 account
