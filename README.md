@@ -45,8 +45,7 @@ Install libpng and zlib from their websites and then enter `pip install <autopy 
 
 #### Windows
 If you get errors through pip, go [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/#autopy) and download the relevant .whl file.
-The .whl files are named like so:    
-`autopy-<pkg version>-cp<python version>-none-<architecture>.whl`.    
+The .whl files are named like so: `autopy-<pkg version>-cp<python version>-none-<architecture>.whl`.    
 32 bit architecture is denoted by win32, while 64 bit is denoted by win_amd64.
 Install the downloaded file by changing into its directory and typing `pip install <filename>.whl`
 
