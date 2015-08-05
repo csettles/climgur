@@ -72,6 +72,8 @@ optional arguments:
   --delay DELAY         delay (s) before taking screenshot
 ```
 
+log.txt contains the submission time and deletion link of an upload if you wish to delete a submission. Just delete the entry from log.txt after you are done.
+
 ## To-Do
 * Add support for >1 account
 * Figure out way to make saving screenshot locally optional

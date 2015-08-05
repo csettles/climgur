@@ -4,6 +4,7 @@ import sys
 import os
 from glob import glob
 import webbrowser
+from datetime import datetime
 
 from auth import get_anon_client, log_in
 from utils import get_metadata
@@ -35,6 +36,8 @@ class Uploader:
             data['album'] = album_id
         image = self.client.upload_from_path(path, data, anon)
 
+        self.log_upload(image)
+
         return image['id']  # return image if more data is needed
 
     def upload_album(self):
@@ -54,7 +57,17 @@ class Uploader:
             img_data = get_metadata() if self.args.metadata else dict()
             self.upload_pic(f, img_data, album_id)
 
+        self.log_upload(album)
+
         return album['id']  # return album if more data is needed
+
+    def log_upload(self, entity):
+        with open('log.txt', 'a+') as f:
+            deletehash = entity['deletehash']
+            link = 'http://imgur.com/delete/{}'.format(deletehash)
+            record = '{} {}'.format(datetime.now().strftime('%c'), link)
+            f.write(record+'\n')
+        return link
 
     def main(self):
         args = self.args
