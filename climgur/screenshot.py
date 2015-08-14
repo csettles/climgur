@@ -1,6 +1,7 @@
 from __future__ import print_function
-from six.moves import xrange
 import time
+
+from six.moves import xrange
 from six import add_move, MovedModule
 add_move(MovedModule('autopy', 'autopy', 'autopy3'))
 from six.moves import autopy

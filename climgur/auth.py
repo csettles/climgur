@@ -1,6 +1,5 @@
-# auth setup taken from imgurpython's example files
 from imgurpython import ImgurClient
-import webbrowser # for convenience
+import webbrowser
 
 from six.moves.configparser import ConfigParser
 from six.moves import input
@@ -9,7 +8,9 @@ from utils import save_config
 
 
 def get_anon_client():
-    '''Simple ImgurClient that is not tied to a user account'''
+    """Simple ImgurClient that only has client credentials.
+    An anonymous IgmurClient is not linked to a user account.
+    """
     config = ConfigParser()
     config.read('auth.ini')
     client_id = config.get('credentials', 'client_id')
@@ -21,8 +22,8 @@ def get_anon_client():
 
 
 def log_in(client):
-    '''Ties ImgurClient with a user account so uploads will be remembered'''
-    config = ConfigParser() 
+    """Authorizes ImgurClient to use user account"""
+    config = ConfigParser()
     config.read('auth.ini')
     access_token = config.get('credentials', 'access_token')
     refresh_token = config.get('credentials', 'refresh_token')

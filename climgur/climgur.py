@@ -16,6 +16,10 @@ file_extensions = ['.png', '.jpg', '.gif', '.tif',
 
 class Uploader:
 
+    """A class that interacts with imgur's api in order to
+    upload local images to imgur.com from the command line.
+    """
+
     def __init__(self, args):
         self.args = args
         self.metadata = dict(title=self.args.title,
@@ -24,10 +28,9 @@ class Uploader:
 
     def init_client(self):
         """Sets ImgurClient scope based on user preference"""
-        if not args.user:
-            self.client = get_anon_client()
-        else:
-            self.client = log_in(get_anon_client())
+        self.client = get_anon_client()
+        if self.args.user:
+            self.client = log_in(self.client)
 
     def upload_pic(self, path, data, album_id=None):
         # as of now, does not check for valid file extension
@@ -45,6 +48,8 @@ class Uploader:
             True) if self.args.metadata else self.metadata
         album = self.client.create_album(album_data)
         print('Created album named "{}"'.format(album_data.get('title')))
+        self.log_upload(album)
+
         album_id = album['id'] if self.client.auth else album['deletehash']
 
         # get all images in the folder with approved file extensions
@@ -57,11 +62,12 @@ class Uploader:
             img_data = get_metadata() if self.args.metadata else dict()
             self.upload_pic(f, img_data, album_id)
 
-        self.log_upload(album)
-
         return album['id']  # return album if more data is needed
 
     def log_upload(self, entity):
+        """Record time of upload and deletion links of upload in
+        local file log.txt
+        """
         with open('log.txt', 'a+') as f:
             deletehash = entity['deletehash']
             link = 'http://imgur.com/delete/{}'.format(deletehash)
